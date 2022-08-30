@@ -14,4 +14,10 @@ if __name__ == "__main__":
     # Replace `your.csv` with a datafile of your choice.
     with open(fpath, "rb") as f:
         r = requests.post("http://localhost:5000/check", files={"data_file": f})
-        print(r.text)
+        response = r.text
+
+    if "FLAG" in response:
+        print(response)
+        flag = response.split(" ")[-1]
+        with open("flag.txt", "w") as f:
+            f.write(flag)
