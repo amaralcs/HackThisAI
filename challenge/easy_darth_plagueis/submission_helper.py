@@ -1,7 +1,21 @@
+import sys
+from argparse import ArgumentParser
 import requests
 
-# TODO modify `your_text`
-your_text = "It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise... he could use the Force to influence the midichlorians to create... life. He had such a knowledge of the Dark Side, he could even keep the ones he cared about from dying. The Dark Side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful... the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. Plagueis never saw it coming. Ironic. He could save others from death, but not himself."
+if __name__ == "__main__":
+    parser = ArgumentParser()
+    parser.add_argument("fpath", help="Path to file with model input text")
+    args = parser.parse_args(sys.argv[1:])
+    fpath = args.fpath
 
-r = requests.post("http://localhost:5000/check", json={"text": your_text})
-print(r.text)
+    with open(fpath, "r") as f:
+        txt = "".join(f.readlines())
+    # print(txt)
+
+    r = requests.post("http://localhost:5000/check", json={"text": txt})
+    response = r.text
+    print(response)
+    if "FLAG" in response:
+        flag = response.split(" ")[-1]
+        with open("flag.txt", "w") as f:
+            f.write(flag)
